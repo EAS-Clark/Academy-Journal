@@ -1,0 +1,22 @@
+
+Cat /ect/resolv.conf
+
+ifconfig
+
+nano /etc/resolv.conf
+#Edit to 8.8.8.8 (Google)
+
+nmcli networking off 
+nmcli networking on
+
+###	nmcli networking off && nmcli networking on
+
+ifconfig
+#see changes
+
+ping 192.168.2.4
+
+
+
+
+
