@@ -1,0 +1,21 @@
+# yum install telnet telnet-server -y
+
+ 
+# systemctl start telnet.socket
+# systemctl enable telnet.socket
+
+# firewall-cmd --permanent --add-port=23/tcp
+# firewall-cmd --reload
+
+# systemctl status telnet.socket
+
+
+# adduser telnetuser
+# passwd telnetuser
+	pass123
+
+
+$ telnet server-IP address
+$ telnet 38.76.11.19
+
+-- Use putty to conntet to telnet
