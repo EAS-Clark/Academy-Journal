@@ -16,6 +16,8 @@
 
 
 $ telnet server-IP address
-$ telnet 38.76.11.19
+$ telnet 	ipadress
 
 -- Use putty to conntet to telnet
+
+login
