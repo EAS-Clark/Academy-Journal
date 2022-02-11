@@ -186,7 +186,12 @@
 	
 	http://howto-madkour.blogspot.com/2013/08/linuxcentos-gateway-server.html?m=1
 	
+		
+	Error cheaking 
 	
+		cd /var/log 
+		tail messages
+		journalctl -ex
 	
 	
 	
