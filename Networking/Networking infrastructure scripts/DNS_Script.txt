@@ -176,22 +176,22 @@ firewall-cmd --reload
 rm -f /etc/sysconfig/network-scripts/ifcfg-ens160
 
 {
-TYPE=Ethernet
-PROXY_METHOD=none
-BROWSER_ONLY=no
-BOOTPROTO=static
-DEFROUTE=yes
-IPV4_FAILURE_FATAL=no
-IPV6 INIT=yes
-IPV6_AUTOCONF=yes
-IPV6_DEFROUTE=yes
-IPV6_FAILURE_FATAL=no
-NAME=ens160
-UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
-DEVICE=ens160
-ONBOOT=yes
-IPADDR=10.0.0.3
-NETMASK=255.255.255.0
+	TYPE=Ethernet
+	PROXY_METHOD=none
+	BROWSER_ONLY=no
+	BOOTPROTO=static
+	DEFROUTE=yes
+	IPV4_FAILURE_FATAL=no
+	IPV6 INIT=yes
+	IPV6_AUTOCONF=yes
+	IPV6_DEFROUTE=yes
+	IPV6_FAILURE_FATAL=no
+	NAME=ens160
+	UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
+	DEVICE=ens160
+	ONBOOT=yes
+	IPADDR=10.0.0.3
+	NETMASK=255.255.255.0
 }/etc/sysconfig/network-scripts/ifcfg-ens160
 
 systemctl restart NetworkManager
