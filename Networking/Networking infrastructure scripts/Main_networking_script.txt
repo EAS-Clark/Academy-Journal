@@ -1,0 +1,8 @@
+#!/bin/bash
+#############
+#Clark brooks
+############
+# Setting server infrastructure
+
+
+
