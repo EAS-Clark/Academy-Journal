@@ -1,0 +1,197 @@
+	
+	Setting up a network using GATEWAY, DHCP and DNS
+	
+	
+		DHCP 	= 10.0.0.2
+		DNS 	= 10.0.0.3
+		Gateway = 10.0.0.1
+		App 	= 10.0.0.4
+	
+
+	DHCP
+	
+		nano /etc/sysconfig/network-scripts/ifcfg-ens192 	# outward facing networkcard 
+	
+		
+			DEVICE=ens192
+			BOOTPROTO=static
+			HWADDR=00:50:56:b2:b2:6a    # Networkcard MAC address  -- ifconfig -> ether 00:50:56:b2:b2:6a
+			IPADDR=192.168.3.17			# Might be assigned by the network
+			BROADCAST=192.168.3.255	
+			NETMASK=255.255.255.0
+			NETWORK=192.168.0.0
+			GATEWAY=192.168.1.1
+			DNS1=8.8.8.8				# Google's DNS  
+			DNS2=8.8.4.4				# Google's DNS 
+			ONBOOT=yes
+			TYPE=Ethernet
+			USERCTL=no
+			IPV6INIT=no
+			PEERDNS=yes
+	
+
+		nano /etc/sysconfig/network-scripts/ifcfg-ens160 	# inward facing networkcard 
+	
+	
+			DEVICE=ens160
+			BOOTPROTO=static
+			HWADDR=00:50:56:B2:F0:4D     # Networkcard MAC address  -- ifconfig -> ether 00:50:56:b2:b2:6a
+			IPADDR=10.0.0.1
+			BROADCAST=10.0.00.255
+			NETMASK=255.255.255.0
+			NETWORK=10.0.0.0
+			GATEWAY=192.168.3.17       # Enter Ip of outward facing networkcard  (ens192)
+			ONBOOT=yes
+			TYPE=Ethernet
+			USERCTL=no
+			IPV6INIT=no
+			PEERDNS=yes
+			
+	
+	
+		Restart network
+
+		# service NetworkManager stop
+		# service NetworkManager start
+		
+		# ifdown ens160
+		# ifdup ens160
+		
+		# ifdown ens192
+		# ifdup ens192
+		
+		# nmtui edit
+
+	
+		Test
+			ping 8.8.8.8
+			ping google.com
+
+	
+	
+		NAT configuration with IP Tables
+		
+			yum install iptables-services -y
+	
+			# iptables -F
+			# iptables -t nat -F
+			# iptables -t mangle -F
+
+			# iptables -X
+			# iptables -t nat -X
+			# iptables -t mangle -X
+	
+			# iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+			# iptables -A FORWARD -i eth1 -j ACCEPT
+			
+			# echo 1 > /proc/sys/net/ipv4/ip_forward
+			
+			# nano /etc/sysctl.conf
+
+				net.ipv4.ip_forward=1
+				
+			Apply the configuration
+
+			# service iptables save
+			# service iptables restart
+			
+			Check if iptables is set to start during boot up
+
+				# chkconfig --list iptables
+	
+	
+		Restart network
+
+			# service NetworkManager stop
+			# service NetworkManager start
+			
+			# ifdown ens160
+			# ifdup ens160
+			
+			# ifdown ens192
+			# ifdup ens192
+			
+			# nmtui edit
+	
+	
+	
+	
+	DNS
+	
+		# nano /etc/resolv.conf
+	
+			nameserver 8.8.8.8 # Primary DNS Server provided by the ISP
+			nameserver 8.8.4.4 # Secondary DNS Server provided by the ISP
+	
+		Restart network
+
+			# service NetworkManager stop
+			# service NetworkManager start
+			
+			# ifdown ens160
+			# ifdup ens160
+			
+			# nmtui edit
+			
+	
+	DHCP
+	
+	
+		# yum install dhcp
+		
+		# vi /etc/dhcp/dhcpd.conf
+		
+			default-lease-time 86400;
+			max-lease-time 172800;
+			option domain-name-servers 8.8.8.8, 8.8.4.4;
+
+			ddns-update-style none;
+			authoritative;
+
+			subnet 10.0.0.0 netmask 255.255.0.0 {
+
+			  range 10.0.0.10 10.0.0.20;
+			  option broadcast-address 10.0.0.255;
+			  option routers 10.0.0.1;
+
+		}
+ 
+		Restart network
+
+			# service NetworkManager stop
+			# service NetworkManager start
+			
+			# ifdown ens160
+			# ifdup ens160
+			
+			# nmtui edit
+	
+	
+	
+	App
+		
+		nano /etc/sysconfig/network-scripts/ifcfg-ens160
+			
+			BOOTPROTO=dhcp
+			
+			# if there is IPADDR delete it 
+		
+		
+		Test
+			ping 8.8.8.8
+			ping google.com
+	
+		
+	
+	
+	http://howto-madkour.blogspot.com/2013/08/linuxcentos-gateway-server.html?m=1
+	
+	
+	
+	
+	Error cheaking 
+	
+		cd /var/log 
+		tail messages
+		journalctl -ex
+	

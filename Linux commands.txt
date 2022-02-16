@@ -29,3 +29,35 @@ search command
 	-ne	not equal to
 
 	History - last used commands
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

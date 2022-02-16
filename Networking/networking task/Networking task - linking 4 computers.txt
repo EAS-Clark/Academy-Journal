@@ -1,0 +1,95 @@
+
+	
+	
+	Set standerlone network 
+	
+	4 computers
+		set static ip
+	
+	cd etc/sysconfig/network-scripts
+		
+		nano ifcfg-ens160
+
+			Bootproto=static
+			netmask=255.255.255.0
+			Gateway=192.168.1.1
+		
+				DHCP 	= 192.168.1.6
+				DNS 	= 192.168.1.5
+				Gateway = 192.168.1.4
+				App 	= 192.168.1.3
+	
+	
+	nmtui
+		wizzerd
+		
+	ifdown ens160
+	ifup ens160
+	
+	
+	Configer Linux Hosts File's Location by name
+	
+	cd etc
+	
+	nano hosts
+		
+		196.168.1.6		appserver
+	
+	
+	Http server set up
+	
+	open port 80 in fire wall			https://linuxconfig.org/redhat-8-open-http-port-80-and-https-port-443-with-firewalld
+	firewall-cmd --zone=public --add-service=http
+	
+	start server 
+	http-server -p 80
+	
+	
+	Download files from HTTP server
+	wget http://appserver/app.zip
+	
+	unzip -r app.zip
+	
+	npm start
+	
+	
+	
+	new version on node
+	rm node
+	wget http://appserver/node
+	chmod +x node
+		node -v 		verson number
+	
+	
+	Firewall open port 80
+	firewall-cmd --zone=public --add-service=http
+	
+	
+
+	DHCP 
+		host entery DNS
+		set enf PORT 80
+		TARGET_URL  DNS:80
+	
+	DNS 
+		host gatway
+		set enf PORT 80
+		TARGET_URL gateway:80	
+		
+	gateway 
+		host gatway
+		set enf PORT 80
+		TARGET_URL app:80
+	
+	app
+		set enf PORT 80
+		TARGET_URL test:80
+	
+		export PORT=80
+		export TARGET_URL=	IP address
+
+	3 computers 
+	npm start 
+
+
+	curl HTTP://192.168.1.6:80 

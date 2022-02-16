@@ -1,0 +1,68 @@
+
+
+Install and setting up DNS
+
+	# yum install bind bind-utils
+
+	# systemctl start named
+	# systemctl enable named
+
+	# systemctl status named 		# way to cheak the status of DNS
+	
+	
+
+	Configure bind DNS server
+
+	# cp /etc/named.conf  /etc/named.bak    -- copy template
+	
+	# nano /etc/named.conf
+
+		listen-on port 53 { 10.0.0.3; }; 		# this is the DNS server or you can use * to listen-on all 
+		isten-on-v6 port 53 { ::1; };
+
+		allow-query { localhost; 10.0.0.0/24; }; 	# type of network
+		
+		
+			//At the bottom of the file 
+		
+		//forward zone
+		zone "clark.local" IN {
+		 type master;
+		 file "clark.local.db";
+		 allow-update { none; };
+		 allow-query { any; };
+		};
+
+		//backward zone
+		zone "10.0.0.in-addr.arpa" IN {
+		 type master;
+		 file "clark.local.rev";
+		 allow-update { none; };
+		 allow-query { any; };
+		};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
