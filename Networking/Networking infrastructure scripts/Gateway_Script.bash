@@ -1,6 +1,6 @@
 #!/bin/bash
 #############
-#$domainName brooks
+#Clark brooks
 ############
 # Setting Gateway infrastructure
 
