@@ -6,11 +6,15 @@
 
 
 
-# Argument 1 will be first part of the network address (10.0.0)
-# Argument 2 will be first part of the network address (3)
-# Argument 3 will be type of network  (/24)
+# Argument 1 will be first part of the network address ($ipAddrees123)
+ipAddrees123="$1"
 
-# Argument 4 Domain name  (template.local)
+# Argument 2 will be last part of the network address (3)
+ipFourthOctave="3"
+
+# Argument 4 Domain name  (template)
+domainName="$2"
+
 
 dnf install -y bind bind-utils
 
@@ -27,6 +31,8 @@ systemctl enable named
 systemctl status named
 
 
+
+
 #
 rm -f /etc/named.conf
 
@@ -41,7 +47,7 @@ rm -f /etc/named.conf
 	//
 
 	options {
-		listen-on port 53 { 10.0.0.3; }; 
+		listen-on port 53 { $ipAddrees123.$ipFourthOctave; }; 
 		listen-on-v6 port 53 { ::1; };
 		directory		"/var/named";
 		dump-file 		"/var/named/data/cache_dump.db";
@@ -49,7 +55,7 @@ rm -f /etc/named.conf
 		memstatistics-file "/var/named/data/named_mem stats.txt";
 		secroots-file "zuar/named/data/named.secroots";
 		recursing-file "/var/named/data/named .recursing"
-		allow-query (localhost: 10.0.0.0/24; };
+		allow-query (localhost: $ipAddrees123.0/24; };
 		
 		/*
 			- If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
@@ -90,28 +96,28 @@ rm -f /etc/named.conf
 
 	//foward zone
 
-	zone "clark.local" IN {
+	zone "$domainName.local" IN {
 		type master;
-		file "clark.local.db";
+		file "$domainName.local.db";
 		allow-update { none; };
 		allow-query { any; };
 	};
 
 	//back zone
 
-	zone "10.0.0.192.in-addr.arpa" IN {
+	zone "$ipAddrees123.192.in-addr.arpa" IN {
 		type master;
-		file "clark.local.rev";
+		file "$domainName.local.rev";
 		allow-update { none; };
 		allow-query { any; };
 	};
 } >> /etc/named.conf
 
 
-rm -f /var/named/clark.local.db
+rm -f /var/named/$domainName.local.db
 {
 	$TTL 86400
-	@ IN SOA dns-primary.clark.local. admin.clark.local. (
+	@ IN SOA dns-primary.$domainName.local. admin.$domainName.local. (
 													2020011800 ;Serial
 													3600 ;Refresh
 													1800 ;Retry
@@ -120,27 +126,27 @@ rm -f /var/named/clark.local.db
 	)
 
 	;Name Server Information
-	@ IN NS dns-primary.clark.local.
+	@ IN NS dns-primary.$domainName.local.
 
 	;IP Address for Name Server
-	dns-primary IN A 10.0.0.3
+	dns-primary IN A $ipAddrees123.$ipFourthOctave
 
 	;A Record for the following Host name
 
-	Gateway   IN   A   10.0.0.1
-	DHCP  IN   A   10.0.0.2
-	DNS  IN   A   10.0.0.3
-	app  IN   A   10.0.0.10
+	Gateway   IN   A   $ipAddrees123.1
+	DHCP  IN   A   $ipAddrees123.2
+	DNS  IN   A   $ipAddrees123.$ipFourthOctave
+	app  IN   A   $ipAddrees123.10
 	
 	;CNAME Record
-	ftp  IN   CNAME www.clark.local.
-}/var/named/clark.local.db
+	ftp  IN   CNAME www.$domainName.local.
+}/var/named/$domainName.local.db
 
 
-rm -f /var/named/clark.local.rev
+rm -f /var/named/$domainName.local.rev
 {
 	$TTL 86400
-	@ IN SOA dns-primary.clark.local. admin.clark.local. (
+	@ IN SOA dns-primary.$domainName. admin.$domainName.local. (
 												2020011800 ;Serial
 												3600 ;Refresh
 												1800 ;Retry
@@ -148,24 +154,24 @@ rm -f /var/named/clark.local.rev
 												86400 ;Minimum TTL
 	)
 	;Name Server Information
-	@ IN NS dns-primary.clark.local.
-	dns-primary     IN      A       10.0.0.3
+	@ IN NS dns-primary.$domainName.local.
+	dns-primary     IN      A       $ipAddrees123.$ipFourthOctave
 
 	;Reverse lookup for Name Server
-	35 IN PTR dns-primary.clark.local.
+	35 IN PTR dns-primary.$domainName.local.
 
 	;PTR Record IP address to Hostname
-	50      IN      PTR     www.clark.local.
+	50      IN      PTR     www.$domainName.local.
 
-}/var/named/clark.local.rev
+}/var/named/$domainName.local.rev
 
 
-chown named:named /var/named/clark.local.db
-chown named:named /var/named/clark.local.rev
+chown named:named /var/named/$domainName.db
+chown named:named /var/named/$domainName.rev
 
 named-checkconf
-named-checkzone linuxtechi.local /var/named/clark.local.db
-named-checkzone 10.0.0.3 /var/named/clark.local.rev
+named-checkzone $domainName.local /var/named/$domainName.db
+named-checkzone $ipAddrees123.$ipFourthOctave /var/named/$domainName.local.rev
 
 
 systemctl restart named
@@ -190,7 +196,7 @@ rm -f /etc/sysconfig/network-scripts/ifcfg-ens160
 	UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
 	DEVICE=ens160
 	ONBOOT=yes
-	IPADDR=10.0.0.3
+	IPADDR=$ipAddrees123.$ipFourthOctave
 	NETMASK=255.255.255.0
 }/etc/sysconfig/network-scripts/ifcfg-ens160
 
