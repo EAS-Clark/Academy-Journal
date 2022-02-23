@@ -20,6 +20,7 @@ echo "
 	TYPE=Ethernet
 	PROXY_METHOD=none
 	BROWSER_ONLY=no
+	BOOTPROTO=static
 	DEFROUTE=yes
 	IPV4_FAILURE_FATAL=no
 	IPV6INIT=yes
@@ -65,4 +66,4 @@ echo "
 
 
 
-systemctl restart networking
+systemctl restart NetworkManager
