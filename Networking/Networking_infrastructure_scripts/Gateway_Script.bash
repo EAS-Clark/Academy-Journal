@@ -10,12 +10,8 @@ ipAddrees123="10.0.0"
 # Argument 4 Domain name  (template)
 domainName="clark"
 
-yum install iptables-services
+yum install -y iptables-services
 
-rm -f /etc/sysconfig/network-scripts/ifcfg-ens160
-rm -f /etc/sysconfig/network-scripts/ifcfg-ens192
-
-systemctl restart NetworkManager
 
 echo "
 	PROXY_METHOD=none
@@ -30,7 +26,7 @@ echo "
 	ONBOOT=yes
 	IPADDR=$ipAddrees123.1
 	NETMASK=255.255.255.0
-	GATEWAY=192.168.1.1
+	GATEWAY=192.168.3.102
 	BROADCAT=$ipAddrees123.255
 	NETWORK=nat
 	NETWORKING=yes
@@ -40,29 +36,18 @@ echo "
 	PREFIX=24
 	BOOTPROTO=static
 " >>/etc/sysconfig/network-scripts/ifcfg-ens192
-
+nmcli
 
 
 echo "
-	DEVICE=ens160
-	HWADDR=00:50:56:32:B2:6A
 	BROADCAST=192.168.3.255
 	NETMASK=255.255.255.0
 	ONBOOT=yes
-	TYPE=Ethernet
-	USERCTL=no
 	IPV6INIT=no
-	PROXY_METHOD=none
 	BROWSER_ONLY=no
 	PREFIX=16
 	DEFROUTE=yes
-	IPV4_FAILURE_FATAL=no
-	IPV6_DEFROUTE=yes
-	IPV6_FAILURE_FATAL=no
-	NAME=ens160
-	UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
-	BOOTPROTO=dhcp
-" >>/etc/sysconfig/network-scripts/ens160
+" >>/etc/sysconfig/network-scripts/ifcfg-ens160
 
 systemctl restart NetworkManager
 
@@ -86,8 +71,6 @@ echo "
 	search $domainName.com easlab.co.uk
 	nameserver 8.8.8.8
 " >>/etc/resolv.conf
-
-yum -y install iptables-services
 
 iptables -F
 iptables -t nat -F
