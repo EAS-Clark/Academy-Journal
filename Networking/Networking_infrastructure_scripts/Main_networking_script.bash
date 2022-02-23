@@ -5,26 +5,29 @@
 # Setting server infrastructure
 
 
-scp Gateway.bash root@192.168.3.17:/test
-
-dos2unix Gateway.bash
-
-Gateway.bash
-
+scp Gateway_Script.bash root@192.168.3.17:/test
 scp DHCP_Script.bash root@192.168.3.17:/test
 scp DNS_Script.bash root@192.168.3.17:/test
 
-cd /test
+dos2unix Gateway_Script.bash
 dos2unix DHCP_Script.bash
 dos2unix DNS_Script.bash
 
+chmod 777 Gateway_Script.bash
+chmod 777 DHCP_Script.bash
+chmod 777 DNS_Script.bashs
 
-scp DNS_Script.bash root@10.0.0.3:/dev
+bash /test/Gateway_Script.bash
 
+cd /test
+
+scp DHCP_Script.bash root@10.0.0.2:/bin
 # some how run
 
-scp DHCP_Script.bash root@10.0.0.3:/dev
+scp DNS_Script.bash root@10.0.0.3:/bin
 # some how run
+
+
 
 
 
