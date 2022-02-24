@@ -6,8 +6,17 @@ var grid = clickableGrid(8,8,function(el,row,col,i){
     console.log("You clicked on item #:",i);
 
     el.className='clicked';
-    if (lastClicked) lastClicked.className='';
+    if (lastClicked) {lastClicked.className='';
+        
+        fetch('https://battleShip.com/shot=row$col')
+            .then(Response => {
+                return Response.json();
+            })
+    }
+   
     lastClicked = el;
+   
+
 });
 
 document.body.appendChild(grid);
@@ -23,10 +32,15 @@ function clickableGrid( rows, cols, callback ){
             cell.innerHTML = ++i;
             cell.addEventListener('click',(function(el,r,c,i){
                 return function(){
-                    callback(el,r,c,i);
+                    callback(el,r,c,i);  
                 }
             })(cell,r,c,i),false);
         }
     }
     return grid;
+}
+
+function makeEnemyGrid(){
+
+
 }
