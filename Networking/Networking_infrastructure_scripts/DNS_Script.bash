@@ -17,9 +17,6 @@ domainName="$2"
 dnf install -y bind bind-utils
 
 
-# test for error install ^
-
-
 
 # start the DNS server using the command
 systemctl start named

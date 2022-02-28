@@ -20,7 +20,7 @@ echo "
 	TYPE=Ethernet
 	PROXY_METHOD=none
 	BROWSER_ONLY=no
-	BOOTPROTO=static
+	BOOTPROTO=staticpetpet
 	DEFROUTE=yes
 	IPV4_FAILURE_FATAL=no
 	IPV6INIT=yes
