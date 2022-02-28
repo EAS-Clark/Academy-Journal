@@ -14,39 +14,34 @@ yum install -y iptables-services
 
 
 echo "
-	PROXY_METHOD=none
-	BROWSER_ONLY=no
-	DEFROUTE=yes
-	IPV4_FAILURE_FATAL=no
-	IPV6INIT=no
-	DEFROUTE=yes
-	IPV6_FAILURE_FATAL=no
-	NAME=ens192
-	DEVICE=ens192
-	ONBOOT=yes
-	IPADDR=$ipAddrees123.1
-	NETMASK=255.255.255.0
-	GATEWAY=192.168.3.102
-	BROADCAT=$ipAddrees123.255
-	NETWORK=nat
-	NETWORKING=yes
-	USERCTL=no
-	HWADDR=00:50:56:32:F0:4D
-	TYPE=Ethernet
-	PREFIX=24
-	BOOTPROTO=static
+DEVICE=ens192
+NAME=ens192
+BOOTPROTO=static
+HWADDR=00:50:56:b2:26:fe
+IPADDR=$ipAddrees123.1
+BROADCAST=$ipAddrees123.255
+NETMASK=255.255.255.0
+NETWORK=nat
+NETWORKING=yes
+GATEWAY=192.168.3.102       # Enter Ip of eth0 
+ONBOOT=yes
+TYPE=Ethernet
+USERCTL=no
+IPV6INIT=no
+PEERDNS=yes
 " >>/etc/sysconfig/network-scripts/ifcfg-ens192
-nmcli
+
+#nmcli
 
 
 echo "
-	BROADCAST=192.168.3.255
-	NETMASK=255.255.255.0
-	ONBOOT=yes
-	IPV6INIT=no
-	BROWSER_ONLY=no
-	PREFIX=16
-	DEFROUTE=yes
+BROADCAST=192.168.255.255
+NETMASK=255.255.255.0
+ONBOOT=yes
+IPV6INIT=no
+BROWSER_ONLY=no
+PREFIX=16
+DEFROUTE=yes
 " >>/etc/sysconfig/network-scripts/ifcfg-ens160
 
 systemctl restart NetworkManager
@@ -61,7 +56,7 @@ echo "
 	# Created by anaconda  Test
 	NETWORKING=yes
 	HOSTNAME=nat
-	GATEWAY=192.168.1.1
+	GATEWAY=192.168.3.102
 
 " >>/etc/sysconfig/network
 
@@ -87,20 +82,10 @@ echo 1 >/proc/sys/net/ipv4/ip_forward
 
 rm -f /etc/sysctl.conf
 echo "
-	# sysctl settings are defined through files in
-	# /usr/lib/sysctl.d/, /run/sysctl.d/, and /etc/sysctl.d/.
-	#
-	# Vendors settings live in /usr/lib/sysctl.d/.
-	# To override a whole file, create a new file with the same in
-	# /etc/sysctl.d/ and put new settings there. To override
-	# only specific settings, add a file with a lexically later
-	# name in /etc/sysctl.d/ and put new settings there.
-	#
-	# For more information, see sysctl.conf (5) and sysct1.d(5).
 
 	net.ipv4.ip_forward=1
 
-" >>/etc/sysctl.conf
+" >/etc/sysctl.conf
 
 service iptables save
 service iptables restart
