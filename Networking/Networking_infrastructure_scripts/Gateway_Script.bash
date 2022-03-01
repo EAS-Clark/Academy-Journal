@@ -18,9 +18,6 @@ echo "GATEWAY=192.168.3.107" >>/etc/sysconfig/network-scripts/ifcfg-ens160
 #nmcli
 
 
-
-systemctl restart NetworkManager
-
 rm -f /etc/hosts
 echo "
 	127.0.0.1 nat localhost.localdomain localhost
@@ -64,8 +61,11 @@ echo "
 " >/etc/sysctl.conf
 
 service iptables save
+wait
 service iptables restart
-
+wait 
 nmcli connection reload 
+wait
 nmcli connection up ens160
+wait
 ifup ens160
