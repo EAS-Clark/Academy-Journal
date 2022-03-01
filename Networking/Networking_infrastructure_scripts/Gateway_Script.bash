@@ -12,7 +12,7 @@ domainName="clark"
 
 yum install -y iptables-services
 
-
+rm -f /etc/sysconfig/network-scripts/ifcfg-ens160
 echo "
 DEVICE=ens160
 NAME=ens160
@@ -35,13 +35,22 @@ PEERDNS=yes
 
 
 echo "
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=dhcp
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+NAME=ens192
+UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
+DEVICE=ens192
+ONBOOT=yes
 BROADCAST=192.168.255.255
 NETMASK=255.255.255.0
-ONBOOT=yes
-IPV6INIT=no
-BROWSER_ONLY=no
-PREFIX=16
-DEFROUTE=yes
 " >>/etc/sysconfig/network-scripts/ifcfg-ens192
 
 systemctl restart NetworkManager
