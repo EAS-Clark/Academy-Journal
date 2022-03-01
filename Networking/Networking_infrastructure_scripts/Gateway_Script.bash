@@ -23,7 +23,7 @@ BROADCAST=$ipAddrees123.255
 NETMASK=255.255.255.0
 NETWORK=nat
 NETWORKING=yes
-GATEWAY=192.168.3.102       # Enter Ip of eth0 
+GATEWAY=192.168.3.105       # Enter Ip of eth0 
 ONBOOT=yes
 TYPE=Ethernet
 USERCTL=no
@@ -56,7 +56,7 @@ echo "
 	# Created by anaconda  Test
 	NETWORKING=yes
 	HOSTNAME=nat
-	GATEWAY=192.168.3.102
+	GATEWAY=192.168.3.105
 
 " >>/etc/sysconfig/network
 
@@ -78,6 +78,8 @@ iptables -t mangle -X
 iptables -t nat -A POSTROUTING -o ens160 -j MASQUERADE
 
 iptables -A FORWARD -i ens192 -j ACCEPT
+iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+
 echo 1 >/proc/sys/net/ipv4/ip_forward
 
 rm -f /etc/sysctl.conf
