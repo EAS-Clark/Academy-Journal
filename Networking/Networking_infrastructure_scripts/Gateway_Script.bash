@@ -14,8 +14,8 @@ yum install -y iptables-services
 
 
 echo "
-DEVICE=ens192
-NAME=ens192
+DEVICE=ens160
+NAME=ens160
 BOOTPROTO=static
 HWADDR=00:50:56:b2:26:fe
 IPADDR=$ipAddrees123.1
@@ -29,7 +29,7 @@ TYPE=Ethernet
 USERCTL=no
 IPV6INIT=no
 PEERDNS=yes
-" >>/etc/sysconfig/network-scripts/ifcfg-ens192
+" >>/etc/sysconfig/network-scripts/ifcfg-ens160
 
 #nmcli
 
@@ -42,7 +42,7 @@ IPV6INIT=no
 BROWSER_ONLY=no
 PREFIX=16
 DEFROUTE=yes
-" >>/etc/sysconfig/network-scripts/ifcfg-ens160
+" >>/etc/sysconfig/network-scripts/ifcfg-ens192
 
 systemctl restart NetworkManager
 
