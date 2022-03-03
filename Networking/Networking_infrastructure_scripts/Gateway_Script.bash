@@ -21,9 +21,9 @@ IPADDR=10.0.0.1
 DEFROUTE=no
 IPV4_FAILURE_FATAL=no
 IPV6INIT=no
-IPV6_AUTOCONF=no
+IPV6_AUTOCONF=yes
 IPV6_DEFROUTE=no
-IPV6_FAILURE_FATAL=no
+IPV6_FAILURE_FATAL=yes
 NAME=ens160
 UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
 DEVICE=ens160
@@ -53,6 +53,7 @@ nameserver 8.8.8.8" >>/etc/resolv.conf
 ifdown ens160 && ifup ens160
 
 systemctl restart NetworkManager
+wait
 
 iptables -F
 iptables -t nat -F
@@ -68,11 +69,10 @@ iptables -A FORWARD -i ens160 -j ACCEPT
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 
 echo 1 >/proc/sys/net/ipv4/ip_forward
-
 echo "net.ipv4.ip_forward=1" >/etc/sysctl.conf
 
 service iptables save
-
+wait
 service iptables restart
 wait 
 nmcli connection reload 
