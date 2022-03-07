@@ -14,35 +14,21 @@ ipFourthOctave="3"
 domainName="clark"
 
 
+
 dnf install -y bind bind-utils
-
-rm -f /etc/sysconfig/network-scripts/ifcfg-ens160
-
-echo "TYPE=Ethernet
-PROXY_METHOD=none
-BROWSER_ONLY=no
-BOOTPROTO=static
-DEFROUTE=yes
-IPV4_FAILURE_FATAL=no
-IPV6 INIT=yes
-IPV6_AUTOCONF=yes
-IPV6_DEFROUTE=yes
-IPV6_FAILURE_FATAL=no
-NAME=ens160
-UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
-DEVICE=ens160
-ONBOOT=yes
-IPADDR=$ipAddress123.$ipFourthOctave
-NETMASK=255.255.255.0
-" >> /etc/sysconfig/network-scripts/ifcfg-ens160
 
 # start the DNS server using the command
 systemctl start named
 systemctl enable named
 
-#systemctl status named
 
-rm -f /etc/named.conf
+echo "DNS1=8.8.8.8
+DNS2=8.8.4.4
+DOMAIN=$domainName" >> /etc/sysconfig/network-scripts/ifcfg-ens160
+
+echo "DNS=10.0.0.3
+FallbackDNS=8.8.8.8
+Domains=$domainName.local" >> /etc/resolv.conf
 
 echo "//named.conf
 
