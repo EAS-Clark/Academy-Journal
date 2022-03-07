@@ -35,17 +35,11 @@ GATEWAY=$ipAddress123.1
 DNS=$ipAddress123.3
 PREFIX=24" >> /etc/sysconfig/network-scripts/ifcfg-ens160
 
-firewall-cmd --zone=public --permanent --add-service=dhcp
-firewall-cmd --reload 
 
-
-rm -f /etc/dhcp/dhcpd.conf
+mv /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.init
 
 echo "default-lease-time	86400; 
 max-lease-time		172800;
-
-option domain name "$domainName.com";
-option doma in-name-servers $ipAddress123.3;
 
 ddns-update-style none;
 
@@ -55,8 +49,17 @@ subnet $ipAddress123.0 netmask 255.255.255.0 {
 	range $ipAddress123.10 $ipAddress123.20; 
 	option broadcast-address $ipAddress123.255;
 	option routers $ipAddress123.1;
+	option domain-name \"$domainName.local\";
+	option domain-search \"$domainName.local\";
+	option domain-name-servers 10.0.0.3, 8.8.8.8, 8.8.4.4;
 }" >> /etc/dhcp/dhcpd.conf
 
+firewall-cmd --zone=public --permanent --add-service=dhcp
+firewall-cmd --reload 
 
+ifup ens160
 
-systemctl restart NetworkManager
+nmcli connection reload
+
+systemctl start dhcpd
+
