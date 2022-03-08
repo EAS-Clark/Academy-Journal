@@ -1,82 +1,116 @@
-#!/bin/sh -x 
+#!/bin/bash
+#############
+#Clark brooks
+############
+# Setting DNS infrastructure
 
-yum install iptables-services -y
+echo "DNS=10.0.0.3
+FallbackDNS=8.8.8.8
+Domains=easlab.local" >> /etc/resolv.conf
 
-# echo "DEVICE=ens192
-# BOOTPROTO=static
-# HWADDR=00:0c:29:d2:c2:75
-# IPADDR=192.168.1.10
-# BROADCAST=192.168.1.255
-# NETMASK=255.255.255.0
-# NETWORK=192.168.1.0
-# GATEWAY=192.168.1.1
-# DNS1=8.8.8.8
-# DNS2=8.8.4.4
-# ONBOOT=yes
-# TYPE=Ethernet
-# USERCTL=no
-# IPV6INIT=no
-# PEERDNS=yes" > /etc/sysconfig/network-scripts/ifcfg-ens192
+echo "DNS1=8.8.8.8
+DNS2=8.8.4.4
+DOMAIN=localdomain" >> /etc/sysconfig/network-scripts/ifcfg-ens160
 
+dnf install bind bind-utils -y
 
-# echo "DEVICE=ens160
-# BOOTPROTO=static
-# HWADDR=00:0c:29:d2:c2:7f
-# IPADDR=192.168.10.1
-# BROADCAST=192.168.10.255
-# NETMASK=255.255.255.0
-# NETWORK=192.168.10.0
-# GATEWAY=192.168.1.10 
-# ONBOOT=yes
-# TYPE=Ethernet
-# USERCTL=no
-# IPV6INIT=no
-# PEERDNS=yes" > /etc/sysconfig/network-scripts/ifcfg-ens160
+systemctl enable named
 
-#echo "PEERDNS=yes" >> /etc/sysconfig/network-scripts/ifcfg-ens160
+systemctl status named
 
-echo "GATEWAY=192.168.3.105" >> /etc/sysconfig/network-scripts/ifcfg-ens160
+service named start
 
-echo "NETWORKING=yes
-HOSTNAME=nat
-GATEWAY=192.168.3.105" >> /etc/sysconfig/network
+echo "OPTIONS=\"-4\"" >> /etc/sysconfig/named
 
-iptables -F
+service named restart
 
-iptables -t nat -F
+echo "@  IN  SOA    dns-primary.easlab.local. root.easlab.local. (
+1001    ;Serial
+3H      ;Refresh
+15M     ;Retry
+1W      ;Expire
+1D      ;Minimum TTL
+)
+;Name Server Information
+@ IN  NS      dns-primary.easlab.local.
+;Reverse lookup for Name Server
+100 IN PTR dns-primary.easlab.local.
+;PTR Record IP address to HostName
+$ipAddress123.1 IN PTR Gateway
+$ipAddress123.2 IN PTR DHCP
+$ipAddress123.$ipFourthOctave IN PTR DNS 
+$ipAddress123.10 IN PTR App"  > /var/named/192.168.0.db
 
-iptables -t mangle -F
+echo "@   IN  SOA     dns-primary.easlab.local. root.easlab.local. (
+1001    ;Serial
+3H      ;Refresh
+15M     ;Retry
+1W      ;Expire
+1D      ;Minimum TTL
+)
+;Name Server Information
+@      IN  NS      dns-primary.easlab.local.
+;IP address of Name Server
+dns-primary IN  A       10.0.0.3
+;A - Record HostName To IP Address
+Gateway   IN   A   $ipAddress123.1
+DHCP  IN   A   $ipAddress123.2
+DNS  IN   A   $ipAddress123.$ipFourthOctave
+app  IN   A   $ipAddress123.10
+;CNAME record
+ftp     IN CNAME        www.easlab.local." > /var/named/easlab.local.db
 
-iptables -X
+# touch /etc/named.conf
 
-iptables -t nat -X
+echo "options {
+        directory     \"/var/named\";
+        dump-file      \"/var/named/data/cache_dump.db\";
+        statistics-file \"/var/named/data/named_stats.txt\";
+        memstatistics-file  \"/var/named/data/named_mem_stats.txt\";
+        secroots-file    \"/var/named/data/named.secroots\";
+        recursing-file \"/var/named/data/named.recursing\";
+        allow-query {localhost;10.0.0.0/24;};
+        /*
+        - If you are building an AUTHORATIVE DNS server, do NOT enable recursion.
+        - If you are building a RECURSIVE (caching) DNS server, you need to enable recursion.
+        - If your recursive DNS server has a public IP address, you MUST enable access control to limit queries to your legitimate users. Failing to do so will cause your server to become part of large scale DNS amplification attacks. Implementing BCP38 within your network would greatly reduce such attack surface
+        */
+        recursion yes;
+        dnssec-enable yes;
+        dnssec-validation yes;
+        
+        managed-keys-directory \"/var/named/dynamic\";
+        pid-file \"/run/named/named.pid\";
+        session-keyfile \"/run/named/session.key\";
+        
+        /* https://fedoraproject.org/wiki/Changes/CryptoPolicy */
+        include \"/etc/crypto-policies/back-ends/bind.config\" ;
+};
+logging {
+        channel default_debug {
+            file \"data/named.run\";
+            severity dynamic;
+        };
+};
+zone \"easlab.local\" IN {
+        type master;
+        file \"/var/named/easlab.local.db\";
+        allow-update { none; };
+};
+zone \"0.0.10.in-addr.arpa\" IN {
+        type master;
+        file \"/var/named/192.168.0.db\";
+        allow-update { none; };
+};
+include \"/etc/named.rfc1912.zones\";
+include \"/etc/named.root.key\";" > /etc/named.conf
 
-iptables -t mangle -X
-
-iptables -t nat -A POSTROUTING -o ens192 -j MASQUERADE
-
-iptables -A FORWARD -i ens160 -j ACCEPT
-
-iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-
-echo 1 > /proc/sys/net/ipv4/ip_forward
-
-echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf
-
-service iptables save
-
-service iptables restart
-
-wait
+ifdown ens160 && ifup ens160
 
 nmcli connection reload
 
-wait
+systemctl restart named 
 
-nmcli connection up ens160
+firewall-cmd --add-service=dns --permanent
 
-wait
-
-ifup ens160
-
-# ifdown ens192 && ifup ens192
+firewall-cmd --reload
