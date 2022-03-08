@@ -52,7 +52,7 @@ subnet $ipAddress123.0 netmask 255.255.255.0 {
 	option domain-name \"$domainName.local\";
 	option domain-search \"$domainName.local\";
 	option domain-name-servers $ipAddress123.3, 8.8.8.8, 8.8.4.4;
-}" >> /etc/dhcp/dhcpd.conf
+}" > /etc/dhcp/dhcpd.conf
 
 firewall-cmd --zone=public --permanent --add-service=dhcp
 firewall-cmd --reload 
