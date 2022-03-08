@@ -35,12 +35,12 @@ echo "//named.conf
 options {
 	listen-on port 53 { 10.0.0.3; };
         listen-on-v6 port 53 { ::1; };
-        directory               "/var/named";
-        dump-file               "/var/named/data/cache_dump.db";
-        statistics-file "/var/named/data/named_stats.txt";
-        memstatistics-file "/var/named/data/named_mem stats.txt";
-        secroots-file "/var/named/data/named.secroots";
-        recursing-file "/var/named/data/named.recursing";
+        directory               \"/var/named\";
+        dump-file               \"/var/named/data/cache_dump.db\";
+        statistics-file \"/var/named/data/named_stats.txt\";
+        memstatistics-file \"/var/named/data/named_mem stats.txt\";
+        secroots-file \"/var/named/data/named.secroots\";
+        recursing-file \"/var/named/data/named.recursing\";
         allow-query { localhost: 10.0.0.0/24; };
 
         recursion yes;
@@ -48,35 +48,35 @@ options {
         dnssec-enable yes;
         dnssec-validation yes;
 
-        managed-keys-directory "/var/named/dynamic";
+        managed-keys-directory \"/var/named/dynamic\";
 
-        pid-file "/run/named/named.pid";
-        session-keyfile "/run/named/session.key";
+        pid-file \"/run/named/named.pid\";
+        session-keyfile \"/run/named/session.key\";
 
-        include "/etc/crypto-policies/back-ends/bind.config"
+        include \"/etc/crypto-policies/back-ends/bind.config\"
 };
 
 logging {
 	channel default_debug {
-                file "data/named.run";
+                file \"data/named.run\";
                 severity dynamic;
         };
 };
 
 
-zone "." IN {
+zone \".\" IN {
 	type hint;
-        file "named.ca";
+        file \"named.ca\";
 };
 
-include "/etc/named.rfc1912.zone";
-include "/etc/named.root.key"
+include \"/etc/named.rfc1912.zone\";
+include \"/etc/named.root.key\"
 
 //foward zone
 
-zone "$domainName.local" IN {
+zone \"$domainName.local\" IN {
         type master;
-        file "$domainName.local.db";
+        file \"$domainName.local.db\";
         allow-update { none; };
         allow-query { any; };
 };
@@ -84,15 +84,15 @@ zone "$domainName.local" IN {
 
 //back zone
 
-zone "10.0.0.192.in-addr.arpa" IN {
+zone \"10.0.0.192.in-addr.arpa\" IN {
         type master;
-        file "$domainName.local.rev";
+        file \"$domainName.local.rev\";
         allow-update { none; };
         allow-query { any; };
 };" >> /etc/named.conf
 
 
-echo "$TTL 86400
+echo "\$TTL 86400
 @ IN SOA dns-primary.$domainName.local. admin.$domainName.local. (
 												2020011800 ;Serial
 												3600 ;Refresh
@@ -119,7 +119,7 @@ ftp  IN   CNAME www.$domainName.local." >> /var/named/$domainName.local.db
 
 
 
-echo "$TTL 86400
+echo "\$TTL 86400
 @ IN SOA dns-primary.$domainName. admin.$domainName.local. (
 											2020011800 ;Serial
 											3600 ;Refresh
