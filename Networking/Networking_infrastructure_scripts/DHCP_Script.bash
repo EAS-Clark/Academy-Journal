@@ -53,7 +53,7 @@ ddns-update-style none;
 authoritative;
 
 subnet $ipAddress123.0 netmask 255.255.255.0 {
-        range $ipAddress123.10 $ipAddress1230.50;
+        range $ipAddress123.10 $ipAddress123.50;
         option subnet-mask 255.255.255.0;
         option routers $ipAddress123.1;
         option domain-name \"$domainName.local\";
