@@ -11,7 +11,9 @@ ipAddress123="10.0.0"
 # Argument 4 Domain name  (template)
 domainName="clark"
 
-yum install -y dhcp
+dnf makecache
+
+dnf install dhcp-server -y
 
 rm -f /etc/sysconfig/network-scripts/ifcfg-ens160
 
@@ -26,7 +28,7 @@ IPV6_AUTOCONF=yes
 IPV6_DEFROUTE=yes
 IPV6_FAILURE_FATAL=no
 NAME=ens160
-UUID=3207c5eb-362e-4764-8ddd-847ab5c94e8e
+UUID=32d7c5eb-362e-4764-8ddd-847ab5c94e8e
 DEVICE=ens160
 ONBOOT=yes
 IPADDR=$ipAddress123.2
