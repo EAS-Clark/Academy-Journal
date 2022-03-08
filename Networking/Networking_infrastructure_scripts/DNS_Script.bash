@@ -30,20 +30,37 @@ FallbackDNS=8.8.8.8
 Domains=$domainName.local" >> /etc/resolv.conf
 
 
-echo "//named.conf
+echo "//
+// named.conf
+//
+// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS
+// server as a caching only nameserver (as a localhost DNS resolver only).
+//
+// See /usr/share/doc/bind*/sample/ for example named configuration files.
+//
 
 options {
-	listen-on port 53 { 10.0.0.3; };
+	listen-on port 53 { 10.0.0.1; };
         listen-on-v6 port 53 { ::1; };
-        directory               \"/var/named\";
-        dump-file               \"/var/named/data/cache_dump.db\";
+        directory       \"/var/named\";
+        dump-file       \"/var/named/data/cache_dump.db\";
         statistics-file \"/var/named/data/named_stats.txt\";
-        memstatistics-file \"/var/named/data/named_mem stats.txt\";
-        secroots-file \"/var/named/data/named.secroots\";
-        recursing-file \"/var/named/data/named.recursing\";
-        allow-query { localhost: 10.0.0.0/24; };
+        memstatistics-file \"/var/named/data/named_mem_stats.txt\";
+        secroots-file   \"/var/named/data/named.secroots\";
+        recursing-file  \"/var/named/data/named.recursing\";
+        allow-query     { localhost; };
 
-        recursion yes;
+        /*
+         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+         - If you are building a RECURSIVE (caching) DNS server, you need to enable
+           recursion.
+         - If your recursive DNS server has a public IP address, you MUST enable access
+           control to limit queries to your legitimate users. Failing to do so will
+           cause your server to become part of large scale DNS amplification
+           attacks. Implementing BCP38 within your network would greatly
+           reduce such attack surface
+        */
+	recursion yes;
 
         dnssec-enable yes;
         dnssec-validation yes;
@@ -53,7 +70,8 @@ options {
         pid-file \"/run/named/named.pid\";
         session-keyfile \"/run/named/session.key\";
 
-        include \"/etc/crypto-policies/back-ends/bind.config\"
+        /* https://fedoraproject.org/wiki/Changes/CryptoPolicy */
+        include \"/etc/crypto-policies/back-ends/bind.config\";
 };
 
 logging {
@@ -63,14 +81,13 @@ logging {
         };
 };
 
-
 zone \".\" IN {
 	type hint;
         file \"named.ca\";
 };
 
-include \"/etc/named.rfc1912.zone\";
-include \"/etc/named.root.key\"
+include \"/etc/named.rfc1912.zones\";
+include \"/etc/named.root.key\";
 
 //foward zone
 
@@ -89,7 +106,7 @@ zone \"10.0.0.192.in-addr.arpa\" IN {
         file \"$domainName.local.rev\";
         allow-update { none; };
         allow-query { any; };
-};" >> /etc/named.conf
+};" > /etc/named.conf 
 
 
 echo "\$TTL 86400
@@ -142,7 +159,7 @@ chown named:named /var/named/$domainName.local.db
 chown named:named /var/named/$domainName.local.rev
 
 named-checkconf
-named-checkzone $domainName.local /var/named/$domainName.db
+named-checkzone $domainName.local /var/named/$domainName.local.db
 named-checkzone $ipAddress123.$ipFourthOctave /var/named/$domainName.local.rev
 
 
