@@ -18,15 +18,14 @@ domainName="clark"
 dnf install -y bind bind-utils
 
 # start the DNS server using the command
-systemctl start named
 systemctl enable named
-
+systemctl start named
 
 echo "DNS1=8.8.8.8
 DNS2=8.8.4.4
 DOMAIN=$domainName" >> /etc/sysconfig/network-scripts/ifcfg-ens160
 
-echo "DNS=10.0.0.3
+echo "DNS=$ipAddress123.3
 FallbackDNS=8.8.8.8
 Domains=$domainName.local" >> /etc/resolv.conf
 
@@ -69,14 +68,14 @@ zone . IN {
         file "named.ca";
 };
 
-include "/etc/named.efc1912.zone";
+include "/etc/named.rfc1912.zone";
 include "/etc/named.root.key"
 
 //foward zone
 
-zone clark.local IN {
+zone $domainName.local IN {
         type master;
-        file "clark.local.db";
+        file "$domainName.local.db";
         allow-update { none; };
         allow-query { any; };
 };
@@ -86,7 +85,7 @@ zone clark.local IN {
 
 zone 10.0.0.192.in-addr.arpa IN {
         type master;
-        file clark.local.rev;
+        file $domainName.local.rev;
         allow-update { none; };
         allow-query { any; };
 };" >> /etc/named.conf
