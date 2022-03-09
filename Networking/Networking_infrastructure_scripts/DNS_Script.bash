@@ -17,9 +17,6 @@ domainName="clark"
 
 dnf install -y bind bind-utils
 
-# start the DNS server using the command
-systemctl enable named
-systemctl start named
 
 echo "DNS1=8.8.8.8
 DNS2=8.8.4.4
@@ -28,6 +25,16 @@ DOMAIN=$domainName" >> /etc/sysconfig/network-scripts/ifcfg-ens160
 echo "DNS=$ipAddress123.3
 FallbackDNS=8.8.8.8
 Domains=$domainName.local" >> /etc/resolv.conf
+
+systemctl enable named
+service named start
+
+echo "OPTIONS=\"-4\"" >> /etc/sysconfig/named
+
+service named restart
+
+# start the DNS server using the command
+
 
 
 echo "//
@@ -48,7 +55,7 @@ options {
         memstatistics-file \"/var/named/data/named_mem_stats.txt\";
         secroots-file   \"/var/named/data/named.secroots\";
         recursing-file  \"/var/named/data/named.recursing\";
-        allow-query     { localhost; };
+        allow-query     { localhost; 10.0.0.0/24; };
 
         /*
          - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
@@ -92,6 +99,7 @@ include \"/etc/named.root.key\";
 //foward zone
 
 zone \"$domainName.local\" IN {
+
         type master;
         file \"$domainName.local.db\";
         allow-update { none; };
@@ -111,11 +119,11 @@ zone \"10.0.0.192.in-addr.arpa\" IN {
 
 echo "\$TTL 86400
 @ IN SOA dns-primary.$domainName.local. admin.$domainName.local. (
-												2020011800 ;Serial
-												3600 ;Refresh
-												1800 ;Retry
-												604800 ;Expire
-												86400 ;Minimum TTL
+							2020011800 ;Serial
+							3600 ;Refresh
+							1800 ;Retry
+							604800 ;Expire
+							86400 ;Minimum TTL
 )
 
 ;Name Server Information
@@ -138,11 +146,11 @@ ftp  IN   CNAME www.$domainName.local." >> /var/named/$domainName.local.db
 
 echo "\$TTL 86400
 @ IN SOA dns-primary.$domainName. admin.$domainName.local. (
-											2020011800 ;Serial
-											3600 ;Refresh
-											1800 ;Retry
-											604800 ;Expire
-											86400 ;Minimum TTL
+							2020011800 ;Serial
+							3600 ;Refresh
+							1800 ;Retry
+							604800 ;Expire
+							86400 ;Minimum TTL
 )
 ;Name Server Information
 @ IN NS dns-primary.$domainName.local.
@@ -152,7 +160,10 @@ dns-primary     IN      A       $ipAddress123.$ipFourthOctave
 35 IN PTR dns-primary.$domainName.local.
 
 ;PTR Record IP address to Hostname
-50      IN      PTR     www.$domainName.local." >> /var/named/$domainName.local.rev
+3      IN      PTR     DNS.clark.local.
+2       IN      PTR     DHCP.clark.local.
+1       IN      PTR	Gateway.clark.local.
+" >> /var/named/$domainName.local.rev
 
 
 chown named:named /var/named/$domainName.local.db
@@ -162,14 +173,15 @@ named-checkconf
 named-checkzone $domainName.local /var/named/$domainName.local.db
 named-checkzone $ipAddress123.$ipFourthOctave /var/named/$domainName.local.rev
 
+ifdown ens160 && ifup ens160
+
+nmcli connection reload
 
 systemctl restart named
 
 firewall-cmd  --add-service=dns --zone=public  --permanent
 firewall-cmd --reload
 
-
-systemctl restart NetworkManager
 
 
 
