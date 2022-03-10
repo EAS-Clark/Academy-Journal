@@ -14,23 +14,10 @@ ipFourthOctave="3"
 domainName="clark"
 
 
-
 dnf install -y bind bind-utils
-
-
-echo "DNS1=8.8.8.8
-DNS2=8.8.4.4
-DOMAIN=$domainName" >> /etc/sysconfig/network-scripts/ifcfg-ens160
-
-echo "DNS=$ipAddress123.3
-FallbackDNS=8.8.8.8
-Domains=$domainName.local" >> /etc/resolv.conf
 
 systemctl enable named
 service named start
-
-echo "OPTIONS=\"-4\"" >> /etc/sysconfig/named
-
 service named restart
 
 # start the DNS server using the command
@@ -47,8 +34,8 @@ echo "//
 //
 
 options {
-	listen-on port 53 { 10.0.0.1; };
-        listen-on-v6 port 53 { ::1; };
+//	listen-on port 53 { 127.0.0.1; };
+//	listen-on-v6 port 53 { ::1; };
         directory       \"/var/named\";
         dump-file       \"/var/named/data/cache_dump.db\";
         statistics-file \"/var/named/data/named_stats.txt\";
@@ -56,6 +43,7 @@ options {
         secroots-file   \"/var/named/data/named.secroots\";
         recursing-file  \"/var/named/data/named.recursing\";
         allow-query     { localhost; 10.0.0.0/24; };
+
 
         /*
          - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
@@ -99,7 +87,6 @@ include \"/etc/named.root.key\";
 //foward zone
 
 zone \"$domainName.local\" IN {
-
         type master;
         file \"$domainName.local.db\";
         allow-update { none; };
@@ -109,7 +96,7 @@ zone \"$domainName.local\" IN {
 
 //back zone
 
-zone \"10.0.0.192.in-addr.arpa\" IN {
+zone \"0.0.10.in-addr.arpa\" IN {
         type master;
         file \"$domainName.local.rev\";
         allow-update { none; };
@@ -133,11 +120,11 @@ echo "\$TTL 86400
 dns-primary IN A $ipAddress123.$ipFourthOctave
 
 ;A Record for the following Host name
-
+www  IN   A   $ipAddress123.21
 Gateway   IN   A   $ipAddress123.1
 DHCP  IN   A   $ipAddress123.2
 DNS  IN   A   $ipAddress123.$ipFourthOctave
-app  IN   A   $ipAddress123.10
+
 	
 ;CNAME Record
 ftp  IN   CNAME www.$domainName.local." >> /var/named/$domainName.local.db
@@ -154,13 +141,14 @@ echo "\$TTL 86400
 )
 ;Name Server Information
 @ IN NS dns-primary.$domainName.local.
-dns-primary     IN      A       $ipAddress123.$ipFourthOctave
+dns-primary IN A $ipAddress123.$ipFourthOctave
 
 ;Reverse lookup for Name Server
-35 IN PTR dns-primary.$domainName.local.
+3 IN PTR dns-primary.$domainName.local.
 
 ;PTR Record IP address to Hostname
-3      IN      PTR     DNS.clark.local.
+21      IN      PTR     www.clark.local
+3       IN      PTR     DNS.clark.local.
 2       IN      PTR     DHCP.clark.local.
 1       IN      PTR	Gateway.clark.local.
 " >> /var/named/$domainName.local.rev
@@ -173,15 +161,11 @@ named-checkconf
 named-checkzone $domainName.local /var/named/$domainName.local.db
 named-checkzone $ipAddress123.$ipFourthOctave /var/named/$domainName.local.rev
 
-ifdown ens160 && ifup ens160
-
-nmcli connection reload
-
 systemctl restart named
 
 firewall-cmd  --add-service=dns --zone=public  --permanent
 firewall-cmd --reload
 
+echo "DNS1=10.0.0.3" >> /etc/sysconfig/network-scripts/ifcfg-ens160
 
-
-
+systemctl restart NetworkManager
