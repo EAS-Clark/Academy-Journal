@@ -5,41 +5,37 @@
 # Setting server infrastructure
 
 
-scp Gateway_Script.bash root@192.168.3.17:/test
-scp DHCP_Script.bash root@192.168.3.17:/test
-scp DNS_Script.bash root@192.168.3.17:/test
+scp Gateway_Script.bash root@192.168.3.107:/bin
+scp DHCP_Script.bash root@192.168.3.107:/bin
+scp DNS_Script.bash root@192.168.3.107:/bin
 
-dos2unix Gateway_Script.bash
-dos2unix DHCP_Script.bash
-dos2unix DNS_Script.bash
+ssh root@192.168.3.107
+cd /bin
 
 chmod 777 Gateway_Script.bash
 chmod 777 DHCP_Script.bash
-chmod 777 DNS_Script.bashs
+chmod 777 DNS_Script.bash
 
-bash /test/Gateway_Script.bash
+echo "Running Gateway_Script.bash"
+Gateway_Script.bash
 
-cd /test
 
+echo "Running DHCP_Script.bash on 10.0.0.2"
 scp DHCP_Script.bash root@10.0.0.2:/bin
-# some how run
+ssh root@10.0.0.2 "/bin/DHCP_Script.bash"
+echo "sleeping for 30 seconds"
+sleep 30s
 
+echo "Running DNS_Script.bash on 10.0.0.3"
 scp DNS_Script.bash root@10.0.0.3:/bin
-# some how run
+ssh root@10.0.0.2 "/bin/DNS_Script.bash"
+echo "sleeping for 30 seconds"
+sleep 30s
 
 
 
 
 
-
-
-
-
-https://www.linuxtechi.com/setup-bind-server-centos-8-rhel-8/
-
-https://www.tecmint.com/install-dhcp-server-client-on-centos-ubuntu/
-
-http://howto-madkour.blogspot.com/2013/08/linuxcentos-gateway-server.html?m=1
 
 
 
