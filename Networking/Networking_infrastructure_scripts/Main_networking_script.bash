@@ -4,6 +4,8 @@
 ############
 # Setting server infrastructure
 
+git clone git@github.com:Enterprise-Automation/trainee-challenge-node-app.git
+
 scp Gateway_Script.bash DHCP_Script.bash DNS_Script.bash root@192.168.3.107:/bin
 
 ssh root@192.168.3.107 "chmod 777 /bin/Gateway_Script.bash /bin/DHCP_Script.bash /bin/DNS_Script.bash"
