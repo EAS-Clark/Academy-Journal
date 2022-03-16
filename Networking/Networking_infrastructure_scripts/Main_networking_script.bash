@@ -27,6 +27,14 @@ ssh -t root@192.168.3.107 ssh root@10.0.0.3 "/bin/DNS_Script.bash && exit"
 
 echo "All serversse have been installed. Enjoy your new netowrk"
 
+#full network restart
+ssh root@192.168.3.107 "ifdown ens160 && ifup ens160"
+ssh -t root@192.168.3.107 ssh root@10.0.0.2 "ifdown ens160 && ifup ens160"
+ssh -t root@192.168.3.107 ssh root@10.0.0.3 "ifdown ens160 && ifup ens160"
+
+ssh root@192.168.3.107 "ifdown ens160 && ifup ens160 && systemctl restart NetworkManager"
+ssh -t root@192.168.3.107 ssh root@10.0.0.2 "ifdown ens160 && ifup ens160 && systemctl restart NetworkManager"
+ssh -t root@192.168.3.107 ssh root@10.0.0.3 "ifdown ens160 && ifup ens160 && systemctl restart NetworkManager"
 
 
 
