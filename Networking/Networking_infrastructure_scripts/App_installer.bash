@@ -2,7 +2,7 @@
 #############
 #Clark brooks
 #############
-
+#Downloads and installs node app with all its dependencys
 
 
 git clone https://github.com/Enterprise-Automation/trainee-challenge-node-app.git
@@ -47,9 +47,6 @@ export PORT=80' >> ~/.bashrc"
 ssh -t root@192.168.3.107 ssh root@10.0.0.2 "reboot"
 ssh -t root@192.168.3.107 ssh root@10.0.0.3 "reboot"
 ssh root@192.168.3.107 "reboot"
-
-
-
 
 
 
