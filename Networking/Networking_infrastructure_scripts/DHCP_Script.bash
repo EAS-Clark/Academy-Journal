@@ -34,7 +34,7 @@ ONBOOT=yes
 IPADDR=$ipAddress123.2
 NETMASK:255.255.255.0
 GATEWAY=$ipAddress123.1
-DNS=$ipAddress123.3
+DNS1=$ipAddress123.3
 DOMAIN=$domainName" >> /etc/sysconfig/network-scripts/ifcfg-ens160
 
 echo "DHCPDARGS=ens160" >> /etc/sysconfig/dhcpd
