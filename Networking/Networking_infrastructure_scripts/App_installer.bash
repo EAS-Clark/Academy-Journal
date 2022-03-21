@@ -18,4 +18,4 @@ firewall-cmd --reload
 npm install node.js
 
 npm i --prefix /var/app/trainee-challenge-node-app
-reboot
+#reboot
