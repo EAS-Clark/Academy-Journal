@@ -27,32 +27,17 @@ ssh -t root@192.168.3.107 ssh root@10.0.0.3 "/bin/DNS_Script.bash && exit"
 
 echo "Network is full network restart"
 #full network restart
-ssh root@192.168.3.107 "ifdown ens160 && ifup ens160"
+
 ssh -t root@192.168.3.107 ssh root@10.0.0.2 "ifdown ens160 && ifup ens160"
 ssh -t root@192.168.3.107 ssh root@10.0.0.3 "ifdown ens160 && ifup ens160"
+ssh root@192.168.3.107 "ifdown ens160 && ifup ens160"
 
 
-ssh root@192.168.3.107 "systemctl restart NetworkManager"
 ssh -t root@192.168.3.107 ssh root@10.0.0.2 "systemctl restart NetworkManager"
 ssh -t root@192.168.3.107 ssh root@10.0.0.3 "systemctl restart NetworkManager"
-
+ssh root@192.168.3.107 "systemctl restart NetworkManager"
 
 echo "All serversse have been installed. Enjoy your new network"
 
 echo "Setting up apps now"
-
-
-git clone https://github.com/Enterprise-Automation/trainee-challenge-node-app.git
-zip trainee-challenge-node-app.zip trainee-challenge-node-app 
-
-scp App_installer.bash root@192.168.3.107:/bin
-
-ssh root@192.168.3.107 "chmod 777 /bin/App_installer.bash"
-ssh -t root@192.168.3.107 "scp /bin/App_installer.bash root@10.0.0.2:/"
-ssh -t root@192.168.3.107 "scp /bin/App_installer.bash root@10.0.0.3:/"
-
-ssh root@192.168.3.107 "/bin/App_installer.bash DHCP 80"
-ssh -t root@192.168.3.107 ssh root@10.0.0.2 "/bin/App_installer.bash DNS 80"
-ssh -t root@192.168.3.107 ssh root@10.0.0.2 "/bin/App_installer.bash Gateway 80"
-
 

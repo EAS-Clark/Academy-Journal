@@ -7,9 +7,8 @@
 #git clone https://github.com/Enterprise-Automation/trainee-challenge-node-app.git
 #zip trainee-challenge-node-app.zip trainee-challenge-node-app 
 
+#scp trainee-challenge-node-app.zip root@192.168.3.107:/
 ssh root@192.168.3.107 "chmod 777 /trainee-challenge-node-app.zip"
-scp trainee-challenge-node-app.zip root@192.168.3.107:/bin
-
 
 ssh -t root@192.168.3.107 'scp /trainee-challenge-node-app.zip root@10.0.0.2:/'
 ssh -t root@192.168.3.107 "scp /trainee-challenge-node-app.zip root@10.0.0.3:/"

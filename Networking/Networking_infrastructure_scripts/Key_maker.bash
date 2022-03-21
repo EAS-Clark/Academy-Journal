@@ -11,4 +11,4 @@ ssh-copy-id root@192.168.3.107
 ssh root@192.168.3.107 "ssh-keygen"
 ssh -t root@192.168.3.107 "ssh-copy-id root@10.0.0.2"
 ssh -t root@192.168.3.107 "ssh-copy-id root@10.0.0.3"
-ssh -t root@192.168.3.107 "ssh-copy-id root@10.0.0.21"
+#ssh -t root@192.168.3.107 "ssh-copy-id root@10.0.0.21"
