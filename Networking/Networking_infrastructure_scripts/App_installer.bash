@@ -12,7 +12,7 @@ mkdir /var/app
 
 unzip /trainee-challenge-node-app.zip -d /var/app/
 
-firewall-cmd --permanent --add-port=80 
+firewall-cmd --zone=public --add-service=http
 firewall-cmd --reload
 
 npm install --prefix /var/app/trainee-challenge-node-app/ node
