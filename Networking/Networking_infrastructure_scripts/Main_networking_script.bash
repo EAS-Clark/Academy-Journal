@@ -17,16 +17,24 @@ ssh -t root@192.168.3.107 'scp /bin/DNS_Script.bash root@10.0.0.3:/bin && exit'
 echo "Running Gateway_Script.bash"
 ssh root@192.168.3.107 "/bin/Gateway_Script.bash && exit"
 
+echo "waiting"
+sleep 20s
 
 echo "Running DHCP_Script.bash on 10.0.0.2"
 ssh -t root@192.168.3.107 ssh root@10.0.0.2 "/bin/DHCP_Script.bash && exit"
 
+echo "waiting"
+sleep 20s
 
 echo "Running DNS_Script.bash on 10.0.0.3"
 ssh -t root@192.168.3.107 ssh root@10.0.0.3 "/bin/DNS_Script.bash && exit"
 
+echo "waiting"
+sleep 20s
+
 echo "Network is full network restart"
 #full network restart
+
 
 ssh -t root@192.168.3.107 ssh root@10.0.0.2 "ifdown ens160 && ifup ens160"
 ssh -t root@192.168.3.107 ssh root@10.0.0.3 "ifdown ens160 && ifup ens160"
