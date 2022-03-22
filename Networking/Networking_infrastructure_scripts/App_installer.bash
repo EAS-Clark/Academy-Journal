@@ -6,13 +6,13 @@
 
 
 echo "export TARGET_URL=$1" >> ~/.bashrc
-echo "export PORT=$2" >> ~/.bashrc
+echo "export PORT=$2" >> ~/.bashrcs
 
 mkdir /var/app
 
 unzip /trainee-challenge-node-app.zip -d /var/app/
 
-firewall-cmd --zone=public --add-service=http
+firewall-cmd --zone=public --add-service=http --permanent
 firewall-cmd --reload
 
 npm install --prefix /var/app/trainee-challenge-node-app/ node
