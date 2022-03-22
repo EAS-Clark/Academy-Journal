@@ -15,6 +15,7 @@ unzip /trainee-challenge-node-app.zip -d /var/app/
 firewall-cmd --permanent --add-port=80 
 firewall-cmd --reload
 
-npm install node
-cd /var/app/trainee-challenge-node-app npm && install
+npm install --prefix /var/app/trainee-challenge-node-app/ node
+npm install --prefix /var/app/trainee-challenge-node-app/
+
 #reboot

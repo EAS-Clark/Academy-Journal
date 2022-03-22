@@ -10,7 +10,7 @@
 scp trainee-challenge-node-app.zip root@192.168.3.107:/
 ssh root@192.168.3.107 "chmod 777 /trainee-challenge-node-app.zip"
 
-ssh -t root@192.168.3.107 'scp /trainee-challenge-node-app.zip root@10.0.0.2:/'
+ssh -t root@192.168.3.107 "scp /trainee-challenge-node-app.zip root@10.0.0.2:/"
 ssh -t root@192.168.3.107 "scp /trainee-challenge-node-app.zip root@10.0.0.3:/"
 
 scp App_installer.bash root@192.168.3.107:/bin
@@ -19,13 +19,14 @@ ssh root@192.168.3.107 "chmod 777 /bin/App_installer.bash"
 ssh -t root@192.168.3.107 'scp /bin/App_installer.bash root@10.0.0.2:/bin'
 ssh -t root@192.168.3.107 "scp /bin/App_installer.bash root@10.0.0.3:/bin"
 
-
+echo "Running on DHCP"
 ssh -t root@192.168.3.107 ssh root@10.0.0.2 "/bin/App_installer.bash DNS 80"
-echo "waiting running on DHCP"
-sleep 20s
+echo "waiting"
+sleep 30s
+echo "Running on DNS"
 ssh -t root@192.168.3.107 ssh root@10.0.0.3 "/bin/App_installer.bash Gateway 80"
-echo "waiting running on DNS"
-sleep 20s
-ssh root@192.168.3.107 "/bin/App_installer.bash DHCP 80"
-echo "waiting running on Gateway"
+#echo "waiting"
+#sleep 30s
+#ssh root@192.168.3.107 "/bin/App_installer.bash DHCP 80"
+#echo "waiting running on Gateway"
 
