@@ -25,8 +25,8 @@ echo "waiting"
 sleep 30s
 echo "Running on DNS"
 ssh -t root@192.168.3.107 ssh root@10.0.0.3 "/bin/App_installer.bash Gateway 80"
-#echo "waiting"
-#sleep 30s
-#ssh root@192.168.3.107 "/bin/App_installer.bash DHCP 80"
-#echo "waiting running on Gateway"
+echo "waiting"
+sleep 30s
+ssh root@192.168.3.107 "/bin/App_installer.bash DHCP 80"
+echo "waiting running on Gateway"
 
