@@ -12,14 +12,14 @@ class Contact {
 
 let phoneBook = [];
 
-let test1 = new Contact("Clark","Brooks","2324234")
-let test2 = new Contact("Tim","sdfsdf","8765")
-let test3 = new Contact("Max","sfg","467")
+let test1 = new Contact("Clark", "Brooks", "2324234")
+let test2 = new Contact("Tim", "sdfsdf", "8765")
+let test3 = new Contact("Max", "sfg", "467")
 
 phoneBook = [test1, test2];
 phoneBook.unshift(test3);
 
-function ContactAdd(){
+function ContactGenerator() {
     inquirer.prompt([
         {
             name: "first_name",
@@ -38,39 +38,51 @@ function ContactAdd(){
 
         }
     ]).then((answer) => {
-        let tep = new Contact(answer.first_name,answer.last_name,answer.phone_number)
+      
+        let tep = new Contact(answer.first_name, answer.last_name, answer.phone_number);
         phoneBook.unshift(tep);
     });
+
 }
 
-function ContactPrintAll(){
-    for(let i = 0; i < phoneBook.length; i++){
+function ContactEditOne(name) {
+    this.name = name;
+    for (let i = 0; i < phoneBook.length; i++) {
+        if (phoneBook[i].firstName === name) {
+            ContactDeleteOne(name);
+            phoneBook.unshift(ContactGenerator());
+        }
+    }
+   
+}
+
+function ContactPrintAll() {
+    for (let i = 0; i < phoneBook.length; i++) {
         console.log("Name: " + phoneBook[i].firstName + " " + phoneBook[i].lastName);
     }
-    
+
 }
 
-function ContactPrintOne(name){
+function ContactPrintOne(name) {
     this.name = name;
-    for(let i = 0; i < phoneBook.length; i++){
-        if (phoneBook[i].firstName === name){
+    for (let i = 0; i < phoneBook.length; i++) {
+        if (phoneBook[i].firstName === name) {
             console.log("Name: " + phoneBook[i].firstName + " " + phoneBook[i].lastName + "\nPhone number: " + phoneBook[i].phoneNumber);
         }
     }
 }
 
-function ContactDeleteOne(name){
+function ContactDeleteOne(name) {
     this.name = name;
-    for(let i = 0; i < phoneBook.length; i++){
-        if (phoneBook[i].firstName === name){
-            console.log(i);
+    for (let i = 0; i < phoneBook.length; i++) {
+        if (phoneBook[i].firstName === name) {
+            console.log("Removing " + phoneBook[i].firstName + " " + phoneBook[i].firstName + " from the phone book");
             phoneBook.splice(i, 1);
         }
     }
-    ContactPrintAll();
 }
 
-function MainMenu(){
+function MainMenu() {
     inquirer.prompt([
         {
             name: "action",
@@ -79,8 +91,8 @@ function MainMenu(){
         }
     ]).then((answer) => {
         console.log(answer.action);
-      
-        switch(answer.action){
+
+        switch (answer.action) {
             case "0":
                 //Show all contact
                 ContactPrintAll();
@@ -88,43 +100,47 @@ function MainMenu(){
                 break;
             case "1":
                 //Show contact
-                inquirer.prompt([{name: "name", type: "input", message: "Enter fisrt name of contact",}]).then((answer) => {ContactPrintOne(answer.name);});
+                inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactPrintOne(answer.name); });
 
                 break;
             case "2":
                 //Add contact
-                ContactAdd();
+                phoneBook.unshift(ContactGenerator());
+
                 
-                break;  
+                break;
             case "3":
                 //Edit contact
-                inquirer.prompt([{name: "name", type: "input", message: "Enter fisrt name of contact",}]).then((answer) => {ContactDeleteOne(answer.name);});
+                inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactEditOne(answer.name); });
 
                 break;
             case "4":
                 //Delete contact
-                inquirer.prompt([{name: "name", type: "input", message: "Enter fisrt name of contact",}]).then((answer) => {ContactDeleteOne(answer.name);});
+                inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactDeleteOne(answer.name); });
 
-                
+
                 break;
             case "5":
-                //Turn off
-                
+            //Turn off
+
         }
+        
 
-    });
+    })
+
+
 }
-function Run(){
-  MainMenu();
-
+function Run() {
+  
+    MainMenu();
 }
 
 Run();
 
 
-  
 
 /*
+
 running = true;
     
 
