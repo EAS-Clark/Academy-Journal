@@ -1,6 +1,7 @@
 //node modules 
 const inquirer = require("inquirer");
 
+
 class Contact {
     constructor(firstName, lastName, phoneNumber) {
         this.firstName = firstName;
@@ -43,10 +44,30 @@ function ContactAdd(){
 }
 
 function ContactPrintAll(){
-    for(let i =0; i < phoneBook.length; i++){
-        console.log(phoneBook[i].firstName + " " + phoneBook[i].lastName);
+    for(let i = 0; i < phoneBook.length; i++){
+        console.log("Name: " + phoneBook[i].firstName + " " + phoneBook[i].lastName);
     }
     
+}
+
+function ContactPrintOne(name){
+    this.name = name;
+    for(let i = 0; i < phoneBook.length; i++){
+        if (phoneBook[i].firstName === name){
+            console.log("Name: " + phoneBook[i].firstName + " " + phoneBook[i].lastName + "\nPhone number: " + phoneBook[i].phoneNumber);
+        }
+    }
+}
+
+function ContactDeleteOne(name){
+    this.name = name;
+    for(let i = 0; i < phoneBook.length; i++){
+        if (phoneBook[i].firstName === name){
+            console.log(i);
+            phoneBook.splice(i, 1);
+        }
+    }
+    ContactPrintAll();
 }
 
 function MainMenu(){
@@ -54,7 +75,7 @@ function MainMenu(){
         {
             name: "action",
             type: "input",
-            message: "For action type:\n\t0: Show all contacts\n\t1: Show contact\n\t2: Add contact\n\t3: Edit contact\n\t4: Delete contact\n",
+            message: "Type for action :\n\t0: Show all contacts\n\t1: Show contact\n\t2: Add contact\n\t3: Edit contact\n\t4: Delete contact\n\t5: Turn off\n",
         }
     ]).then((answer) => {
         console.log(answer.action);
@@ -63,32 +84,68 @@ function MainMenu(){
             case "0":
                 //Show all contact
                 ContactPrintAll();
+
                 break;
             case "1":
                 //Show contact
+                inquirer.prompt([{name: "name", type: "input", message: "Enter fisrt name of contact",}]).then((answer) => {ContactPrintOne(answer.name);});
 
                 break;
             case "2":
                 //Add contact
                 ContactAdd();
+                
                 break;  
             case "3":
                 //Edit contact
+                inquirer.prompt([{name: "name", type: "input", message: "Enter fisrt name of contact",}]).then((answer) => {ContactDeleteOne(answer.name);});
 
                 break;
             case "4":
                 //Delete contact
+                inquirer.prompt([{name: "name", type: "input", message: "Enter fisrt name of contact",}]).then((answer) => {ContactDeleteOne(answer.name);});
+
                 
-        
+                break;
+            case "5":
+                //Turn off
+                
         }
 
     });
 }
 function Run(){
-    
-    MainMenu();
- 
+  MainMenu();
 
 }
 
 Run();
+
+
+  
+
+/*
+running = true;
+    
+
+let myPromise = new Promise(function(myResolve, myReject) {
+let x = 0;
+
+// The producing code (this may take some time)
+
+if (x == 0) {
+    myResolve("OK");
+} else {
+    myReject("Error");
+}
+});
+
+myPromise.then(
+function(value) {
+    MainMenu()
+    console.log(value); 
+
+},
+function(error) {console.log(error);}
+);
+*/
