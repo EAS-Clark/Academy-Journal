@@ -82,60 +82,51 @@ function ContactDeleteOne(name) {
     }
 }
 
-function MainMenu() {
+async function MainMenu() {
     inquirer.prompt([
         {
             name: "action",
-            type: "input",
-            message: "Type for action :\n\t0: Show all contacts\n\t1: Show contact\n\t2: Add contact\n\t3: Edit contact\n\t4: Delete contact\n\t5: Turn off\n",
+            type: "list",
+            message: "Select a action",
+            choices: ["Show all contacts", "Show contact", "Add contact", "Edit contact", "Delete contact", "Turn off"]
         }
     ]).then((answer) => {
         console.log(answer.action);
 
         switch (answer.action) {
-            case "0":
-                //Show all contact
+            case "Show all contacts":
                 ContactPrintAll();
 
                 break;
-            case "1":
-                //Show contact
+            case "Show contact":
                 inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactPrintOne(answer.name); });
 
                 break;
-            case "2":
-                //Add contact
+            case "Add contact":
                 phoneBook.unshift(ContactGenerator());
 
                 
                 break;
-            case "3":
-                //Edit contact
+            case "Edit contact":
                 inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactEditOne(answer.name); });
 
                 break;
-            case "4":
-                //Delete contact
+            case "Delete contact":
                 inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactDeleteOne(answer.name); });
 
-
                 break;
-            case "5":
+            case "Turn off":
             //Turn off
 
         }
-        
-
     })
 
 
 }
-function Run() {
-  
-    MainMenu();
-}
 
-Run();
+  
+MainMenu();
+
 
 
 
