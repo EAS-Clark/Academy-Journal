@@ -44,17 +44,51 @@ function ContactAdd(){
 
 function ContactPrintAll(){
     for(let i =0; i < phoneBook.length; i++){
-        console.log(phoneBook[i].firstName);
+        console.log(phoneBook[i].firstName + " " + phoneBook[i].lastName);
     }
     
 }
 
+function MainMenu(){
+    inquirer.prompt([
+        {
+            name: "action",
+            type: "input",
+            message: "For action type:\n\t0: Show all contacts\n\t1: Show contact\n\t2: Add contact\n\t3: Edit contact\n\t4: Delete contact\n",
+        }
+    ]).then((answer) => {
+        console.log(answer.action);
+      
+        switch(answer.action){
+            case "0":
+                //Show all contact
+                ContactPrintAll();
+                break;
+            case "1":
+                //Show contact
+
+                break;
+            case "2":
+                //Add contact
+                ContactAdd();
+                break;  
+            case "3":
+                //Edit contact
+
+                break;
+            case "4":
+                //Delete contact
+                
+        
+        }
+
+    });
+}
 function Run(){
     
-    ContactAdd();
-    
+    MainMenu();
  
-    ContactPrintAll();
+
 }
 
 Run();
