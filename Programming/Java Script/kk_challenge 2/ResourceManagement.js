@@ -41,7 +41,8 @@ function run(){
     const namepace = new Namepace(total, containers, initContainers, sidecars);
 
     console.log(namepace)
-    console.log(namepace.containers.limit.cpu)
+    console.log(namepace.initContainers.limit.cpu)
+    console.log(namepace.initContainers.limit.men)
 }
 
 run();
