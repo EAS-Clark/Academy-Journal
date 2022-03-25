@@ -15,7 +15,7 @@ let phoneBook = [];
 
 function saveData(data) {
 
-    fs.writeFile("./PhoneData.json", JSON.stringify(data, null, 2), errorMessage => {
+    fs.writeFile("./PhoneData.json", JSON.stringify(data, null, 2), err => {
         if (err) {
             console.log(err);
         } else {
@@ -98,6 +98,7 @@ function ContactEditOne(name) {
         if (phoneBook[i].firstName === name) {
             ContactDeleteOne(name);
             phoneBook.unshift(ContactGenerator());
+            saveData(phoneBook);
         }
     }
 
@@ -137,7 +138,6 @@ async function MainMenu() {
           return;
         }
         phoneBook = fileData;
-        console.log(phoneBook);
       });
 
 
@@ -148,16 +148,16 @@ async function MainMenu() {
             message: "Select a action",
             choices: ["Show all contacts", "Show contact", "Add contact", "Edit contact", "Delete contact", "Turn off"]
         }
-    ]).then((answer) => {
-        console.log(answer.action);
+    ]).then(({action}) => {
+        console.log(action);
 
-        switch (answer.action) {
+        switch (action) {
             case "Show all contacts":
                 ContactPrintAll();
 
                 break;
             case "Show contact":
-                inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactPrintOne(answer.name); });
+                inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then(({name}) => { ContactPrintOne(name); });
 
                 break;
             case "Add contact":
