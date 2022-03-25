@@ -1,6 +1,6 @@
 //node modules 
 const inquirer = require("inquirer");
-
+const fs = require("fs");
 
 class Contact {
     constructor(firstName, lastName, phoneNumber) {
@@ -12,12 +12,54 @@ class Contact {
 
 let phoneBook = [];
 
-let test1 = new Contact("Clark", "Brooks", "2324234")
-let test2 = new Contact("Tim", "sdfsdf", "8765")
-let test3 = new Contact("Max", "sfg", "467")
 
-phoneBook = [test1, test2];
-phoneBook.unshift(test3);
+function saveData(data) {
+
+    fs.writeFile("./PhoneData.json", JSON.stringify(data, null, 2), errorMessage => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("File saved");
+
+        }
+
+    });
+}
+
+function updateData(input) {
+
+    jsonReader("./PhoneData.json", (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+            data + input;
+            fs.writeFile("./PhoneData.json", JSON.stringify(data, null, 2), errorMessage => {
+                if (err) {
+                    console.log(err);
+                } 
+            });
+        }
+      });
+}
+
+//updateData(test3);
+
+
+function jsonReader(filePath, cb) {
+    fs.readFile(filePath, (err, fileData) => {
+      if (err) {
+        return cb && cb(err);
+      }
+      try {
+        const object = JSON.parse(fileData);
+        return cb && cb(null, object);
+      } catch (err) {
+        return cb && cb(err);
+      }
+    });
+}
+
+
 
 function ContactGenerator() {
     inquirer.prompt([
@@ -38,7 +80,7 @@ function ContactGenerator() {
 
         }
     ]).then((answer) => {
-      
+
         let tep = new Contact(answer.first_name, answer.last_name, answer.phone_number);
         phoneBook.unshift(tep);
     });
@@ -53,7 +95,7 @@ function ContactEditOne(name) {
             phoneBook.unshift(ContactGenerator());
         }
     }
-   
+
 }
 
 function ContactPrintAll() {
@@ -83,6 +125,17 @@ function ContactDeleteOne(name) {
 }
 
 async function MainMenu() {
+
+    jsonReader("./PhoneData.json", (err, fileData) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        phoneBook = fileData;
+        console.log(phoneBook);
+      });
+
+
     inquirer.prompt([
         {
             name: "action",
@@ -105,7 +158,7 @@ async function MainMenu() {
             case "Add contact":
                 phoneBook.unshift(ContactGenerator());
 
-                
+
                 break;
             case "Edit contact":
                 inquirer.prompt([{ name: "name", type: "input", message: "Enter fisrt name of contact", }]).then((answer) => { ContactEditOne(answer.name); });
@@ -124,35 +177,11 @@ async function MainMenu() {
 
 }
 
-  
-MainMenu();
+
+//MainMenu();
 
 
 
 
-/*
 
-running = true;
-    
 
-let myPromise = new Promise(function(myResolve, myReject) {
-let x = 0;
-
-// The producing code (this may take some time)
-
-if (x == 0) {
-    myResolve("OK");
-} else {
-    myReject("Error");
-}
-});
-
-myPromise.then(
-function(value) {
-    MainMenu()
-    console.log(value); 
-
-},
-function(error) {console.log(error);}
-);
-*/
