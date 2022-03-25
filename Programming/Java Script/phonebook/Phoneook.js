@@ -87,6 +87,11 @@ function ContactGenerator() {
 
 }
 
+function ContactAdd(){
+    phoneBook.unshift(ContactGenerator());
+    saveData(phoneBook);
+}
+
 function ContactEditOne(name) {
     this.name = name;
     for (let i = 0; i < phoneBook.length; i++) {
@@ -156,8 +161,7 @@ async function MainMenu() {
 
                 break;
             case "Add contact":
-                phoneBook.unshift(ContactGenerator());
-
+                ContactAdd();
 
                 break;
             case "Edit contact":
@@ -177,8 +181,7 @@ async function MainMenu() {
 
 }
 
-
-//MainMenu();
+MainMenu();
 
 
 
