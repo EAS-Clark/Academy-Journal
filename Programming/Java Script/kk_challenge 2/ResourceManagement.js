@@ -32,7 +32,18 @@ class resource {
     }
 }
 
+function reseourseMaker (res){
 
+  const total = new resource(new limit(res.total.limit), new request(res.total.request));
+  const containers = new resource(new limit(res.containers.limit), new request(res.containers.request));
+  const initContainers = new resource(new limit(res.initContainers.limit), new request(res.initContainers.request));
+  const sidecars = new resource( new limit(res.sidecars.limit), new request(res.sidecars.request));
+
+  const dsfsdf = new namespace(total, containers, initContainers, sidecars);
+  console.log(dsfsdf);
+  console.log(dsfsdf.initContainers.limit.cpu);
+  console.log(dsfsdf.initContainers.limit.men);
+}
 
 
 
@@ -55,18 +66,11 @@ function run(){
       const doc = yaml.load(fs.readFileSync('limits.yaml', 'utf8'));
       console.log(doc.total);
       console.log(Object.keys(doc));
-      console.log(doc.namespace.namespace1);
+     // console.log(doc.namespace.namespace1);
   
-      const total = new resource(new limit(doc.namespace.namespace1.total.limit), new request(doc.namespace.namespace1.total.request));
-      const containers = new resource(new limit(doc.namespace.namespace1.containers.limit), new request(doc.namespace.namespace1.containers.request));
-      const initContainers = new resource(new limit(doc.namespace.namespace1.initContainers.limit), new request(doc.namespace.namespace1.initContainers.request));
-      const sidecars = new resource( new limit(doc.namespace.namespace1.sidecars.limit), new request(doc.namespace.namespace1.sidecars.request));
-  
-      const dsfsdf = new namespace(total, containers, initContainers, sidecars);
-  
-      console.log(dsfsdf);
-      console.log(dsfsdf.initContainers.limit.cpu);
-      console.log(dsfsdf.initContainers.limit.men);
+
+      reseourseMaker(doc.namespace.namespace1);
+
 
 
 
