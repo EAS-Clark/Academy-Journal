@@ -42,7 +42,7 @@ function reseourseMaker (res){
   const dsfsdf = new namespace(total, containers, initContainers, sidecars);
   console.log(dsfsdf);
   console.log(dsfsdf.initContainers.limit.cpu);
-  console.log(dsfsdf.initContainers.limit.mem);
+  console.log(dsfsdf.initContainers.limit.men);
 }
 
 
@@ -56,7 +56,6 @@ function run(){
 
     const namespace = new Namepace(total, containers, initContainers, sidecars);
 
-    
     console.log(namespace);
     console.log(namespace.initContainers.limit.cpu);
     console.log(namespace.initContainers.limit.men);
@@ -65,12 +64,15 @@ function run(){
 
     try {
       const doc = yaml.load(fs.readFileSync('limits.yaml', 'utf8'));
-
       console.log(doc.total);
+      console.log(Object.keys(doc));
+      console.log(doc.namespace.namespace1);
   
-      const namespace1 = new reseourseMaker(doc.namespace.namespace1);
 
-      const namespace2 = new reseourseMaker(doc.namespace.namespace2);
+      reseourseMaker(doc.namespace.namespace1);
+
+
+
 
       
     } catch (e) {
