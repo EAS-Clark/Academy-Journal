@@ -1,19 +1,26 @@
 const express = require('express');
-const chalk = require('chalk');
-const debug = require('debug')('app');
-const morgan = require('morgan');
 const path = require('path');
 
-const PORT = process.env.PORT || 3000;
+
+
 const app = express();
+const port = process.env.PORT || 8080;
 
-app.use(morgan('tiny'));
-app.use(express.static(path.join(__dirname, '/public/')));
 
-app.get('/', (req, res) => {
-  res.send('Hello from my app');
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
-app.listen(PORT, () => {
-  debug(`listening on port ${chalk.green(PORT)}`);
-});
+
+// app.get('/', (req, res) => {
+//   Item.find()
+//     .then(items => res.render('index', { items }))
+//     .catch(err => res.status(404).json({ msg: 'No items found' }));
+// });
+
+app.listen(port);
+console.log('Server started at http://localhost:' + port);
+
+
+
+module.exports = app;
