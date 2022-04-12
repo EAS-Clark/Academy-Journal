@@ -11,4 +11,8 @@ services:
     ports:
       - 3000:3000
     
-mon
+mongodb:
+  image: mongodb:latest
+  ports:
+    - 27017:27017
+    
